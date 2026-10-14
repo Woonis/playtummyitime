@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<!--
+  터미타임아 놀자! / Play with Tummy Time! — 지원 (Support)
+  App Store Connect의 "지원 URL"이 가리키는 단독 페이지입니다.
+  껍데기(색·언어 토글·푸터)는 같은 폴더의 privacy.html과 같게 두었습니다 — 두 페이지를
+  나란히 보는 사람이 같은 앱의 것임을 알아보게 하려고요.
+  외부 파일·폰트·스크립트에 의존하지 않아요.
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지원 · 터미타임아 놀자! / Support · Play with Tummy Time!</title>
+<meta name="description" content="터미타임아 놀자! 사용 안내와 문의. Help and contact for Play with Tummy Time!">
+<meta name="color-scheme" content="light">
+<style>
+  :root {
+    --ink: #3B3B4F;
+    --brand-ink: #21263D;
+    --brand-subtle: #737A94;
+    /* 아이콘 배경과 같은 로즈 (Tools/make_icon.swift의 bgTop·bgBottom) */
+    --grad-start: #F7799F;
+    --grad-end: #C74C8E;
+    /* 앱 배경과 같은 연한 분홍 → 크림 (Support/Theme.swift의 background) */
+    --backdrop-top: #FFF0F6;
+    --backdrop-bottom: #FFF6EF;
+    --rose: #D2477E;
+    --card-navy: #10275E;
+    --card-red: #E5342F;
+    --card-yellow: #FFC72C;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    padding: 28px 18px 56px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Apple SD Gothic Neo",
+                 "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
+    color: var(--ink);
+    line-height: 1.7;
+    background: linear-gradient(180deg, rgba(255,240,246,0.9) 0%, rgba(255,246,239,0.6) 42%, #fff 100%);
+    background-attachment: fixed;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* 이름표 */
+  header { text-align: center; margin-bottom: 26px; }
+  .mark { width: 76px; height: 76px; display: block; margin: 0 auto 12px; }
+  h1 {
+    margin: 0;
+    font-size: clamp(22px, 5.2vw, 30px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--brand-ink);
+  }
+  .sub { margin: 6px 0 0; font-size: 14px; font-weight: 600; color: var(--brand-subtle); }
+
+  /* 언어 고르기 */
+  .langs {
+    display: flex; justify-content: center; gap: 6px;
+    margin: 18px auto 0; padding: 4px;
+    width: max-content;
+    background: rgba(255,255,255,0.8);
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .langs button {
+    appearance: none; border: 0; cursor: pointer;
+    font: inherit; font-size: 13px; font-weight: 800;
+    color: var(--brand-subtle);
+    padding: 7px 16px; border-radius: 999px;
+    background: transparent;
+    transition: background 0.15s, color 0.15s;
+  }
+  .langs button[aria-pressed="true"] {
+    background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+    color: #fff;
+  }
+  .langs button:focus-visible { outline: 3px solid var(--grad-end); outline-offset: 2px; }
+
+  /* 안내 카드 */
+  .intro {
+    margin: 26px 0 20px;
+    font-size: 15px; font-weight: 600;
+    color: rgba(59,59,79,0.8);
+  }
+  .card {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: #fff;
+    border: 1.5px solid rgba(59,59,79,0.08);
+    border-radius: 20px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+  }
+  .card .emoji { font-size: 28px; line-height: 1.2; flex: none; }
+  .card h2 {
+    margin: 0 0 4px;
+    font-size: 17px; font-weight: 800; letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .card p { margin: 0; font-size: 14.5px; color: rgba(59,59,79,0.72); }
+  .card p + p { margin-top: 6px; }
+
+  /* 문의 */
+  .mailto {
+    display: block; text-align: center;
+    margin: 26px 0 8px; padding: 16px 18px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+    color: #fff; font-size: 16px; font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(199,76,142,0.28);
+  }
+  .mailto:focus-visible { outline: 3px solid var(--grad-end); outline-offset: 3px; }
+  .reply { margin: 0; text-align: center; font-size: 13px; color: rgba(59,59,79,0.6); }
+
+  /* 자세히 */
+  details {
+    background: rgba(255,255,255,0.72);
+    border: 1.5px solid rgba(59,59,79,0.08);
+    border-radius: 20px;
+    padding: 4px 18px;
+    margin-top: 22px;
+  }
+  summary {
+    cursor: pointer; list-style: none;
+    padding: 12px 0;
+    font-size: 15px; font-weight: 800;
+    color: var(--brand-ink);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: " ⌄"; color: var(--brand-subtle); }
+  details[open] summary::after { content: " ⌃"; }
+  details h3 {
+    margin: 16px 0 4px;
+    font-size: 14.5px; font-weight: 800; color: var(--ink);
+  }
+  details p, details li { font-size: 14px; color: rgba(59,59,79,0.75); }
+  details ul { margin: 4px 0 0; padding-left: 22px; }
+  details > *:last-child { margin-bottom: 16px; }
+  a { color: var(--rose); font-weight: 700; }
+
+  footer {
+    margin-top: 30px; text-align: center;
+    font-size: 12px; font-weight: 700;
+    color: rgba(59,59,79,0.45);
+  }
+  footer p { margin: 3px 0; }
+
+  /* 언어 전환 */
+  [data-lang] { display: none; }
+  html[lang="ko"] [data-lang="ko"],
+  html[lang="en"] [data-lang="en"] { display: revert; }
+  html[lang="ko"] .card[data-lang="ko"],
+  html[lang="en"] .card[data-lang="en"] { display: flex; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .langs { display: none; }
+    [data-lang] { display: revert !important; }
+    details { display: block; }
+    details > div { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <!-- 앱 아이콘과 같은 그림: 로즈 네모 안 타일 2×2 (겹동그라미·체크무늬·하트·별) -->
+    <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="터미타임아 놀자! / Play with Tummy Time!">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#F7799F"/>
+          <stop offset="1" stop-color="#C74C8E"/>
+        </linearGradient>
+      </defs>
+      <rect width="100" height="100" rx="24" fill="url(#g)"/>
+      <ellipse cx="6" cy="6" rx="42" ry="42" fill="#fff" opacity="0.10"/>
+
+      <!-- 왼쪽 위: 겹동그라미 (흑백 카드) -->
+      <rect x="13.2" y="13.2" width="34.2" height="34.2" rx="9.4" fill="#fff" opacity="0.97"/>
+      <circle cx="30.3" cy="30.3" r="14.36" fill="#000"/>
+      <circle cx="30.3" cy="30.3" r="10.77" fill="#fff"/>
+      <circle cx="30.3" cy="30.3" r="7.18" fill="#000"/>
+      <circle cx="30.3" cy="30.3" r="3.59" fill="#fff"/>
+
+      <!-- 오른쪽 위: 체크무늬 3×3 -->
+      <rect x="52.6" y="13.2" width="34.2" height="34.2" rx="9.4" fill="#fff" opacity="0.97"/>
+      <g fill="#000">
+        <rect x="57.39" y="17.99" width="8.21" height="8.21"/>
+        <rect x="73.81" y="17.99" width="8.21" height="8.21"/>
+        <rect x="65.60" y="26.20" width="8.21" height="8.21"/>
+        <rect x="57.39" y="34.41" width="8.21" height="8.21"/>
+        <rect x="73.81" y="34.41" width="8.21" height="8.21"/>
+      </g>
+
+      <!-- 왼쪽 아래: 빨간 하트 -->
+      <rect x="13.2" y="52.6" width="34.2" height="34.2" rx="9.4" fill="#fff" opacity="0.97"/>
+      <g transform="translate(-36.675 39.775) scale(0.95)">
+        <path d="M70.5 40c-8-5.5-12-9.5-12-14a6.2 6.2 0 0 1 12-2.4A6.2 6.2 0 0 1 82.5 26c0 4.5-4 8.5-12 14z" fill="#E5342F"/>
+      </g>
+
+      <!-- 오른쪽 아래: 남색 바탕 위 노란 별. 노랑은 흰 바탕에서 사라집니다 -->
+      <rect x="52.6" y="52.6" width="34.2" height="34.2" rx="9.4" fill="#10275E"/>
+      <g transform="translate(9.775 9.265) scale(0.85)">
+        <path d="M70.5 60l3.6 7.3 8 1.2-5.8 5.7 1.4 8-7.2-3.8-7.2 3.8 1.4-8-5.8-5.7 8-1.2z" fill="#FFC72C"/>
+      </g>
+    </svg>
+
+    <h1>
+      <span data-lang="ko">도움이 필요하세요?</span>
+      <span data-lang="en">Need a hand?</span>
+    </h1>
+    <p class="sub">
+      <span data-lang="ko">터미타임아 놀자! 🤍</span>
+      <span data-lang="en">Play with Tummy Time! 🤍</span>
+    </p>
+
+    <nav class="langs" aria-label="Language">
+      <button type="button" data-set-lang="ko" aria-pressed="true">한국어</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">English</button>
+    </nav>
+  </header>
+
+  <main>
+    <p class="intro" data-lang="ko">
+      터미타임아 놀자!는 아직 화면을 만지지 못하는 아기를 위한 앱이에요. 대비가 센 그림 한 장이
+      천천히 나타나 지나가고, 고르고 끝내는 일은 모두 보호자가 합니다. 자주 묻는 것들을 먼저
+      찾아보시고, 없으면 메일로 알려 주세요.
+    </p>
+    <p class="intro" data-lang="en">
+      Play with Tummy Time! is for babies who cannot touch a screen yet. One high-contrast picture
+      fades in and drifts slowly across, and every choice belongs to the grown-up. Have a look below
+      first — if your question isn’t there, just send an email.
+    </p>
+
+    <!-- 1 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">🤍</span>
+      <div>
+        <h2>어떻게 하는 건가요?</h2>
+        <p>아기를 엎드려 눕히고, 아기 눈에서 25~30cm쯤 되는 곳에 기기를 세우거나 눕혀 둡니다.
+          첫 화면에서 모드를 고르고 <strong>터미타임 시작</strong>을 누르면 카드가 나타나기 시작해요.
+          끝낼 때는 오른쪽 위 <strong>종료</strong>를 누릅니다.</p>
+        <p>처음에는 한두 장(10~20초)으로 짧게 해 보고, 아기가 보는 만큼만 늘려 주세요.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">🤍</span>
+      <div>
+        <h2>How do I use it?</h2>
+        <p>Lay your baby on their tummy and prop or lay the device about 25–30&nbsp;cm from their eyes.
+          Pick a mode on the first screen and tap <strong>Start tummy time</strong>; cards begin to
+          appear. Tap <strong>Stop</strong> at the top right when you’re done.</p>
+        <p>Start with a card or two (10–20 seconds) and go only as long as your baby keeps looking.</p>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">👀</span>
+      <div>
+        <h2>어떤 모드를 골라야 하나요?</h2>
+        <p>태어난 날을 적어 두면 맞는 모드에 <strong>추천</strong>이 붙습니다. 대개
+          <strong>흑백</strong>은 생후 3개월 전, <strong>흑백 + 컬러</strong>는 3~4개월,
+          <strong>컬러</strong>는 5개월부터예요. 갓 태어난 아기는 색을 거의 보지 못해서 흑백부터입니다.</p>
+        <p>잠긴 모드는 없습니다. 추천과 다르게 골라도 되고, 아기가 더 잘 보는 쪽이 맞는 쪽이에요.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">👀</span>
+      <div>
+        <h2>Which mode should I pick?</h2>
+        <p>Enter the birth date and the right mode gets a <strong>Suggested</strong> badge. Roughly:
+          <strong>Black &amp; White</strong> before 3 months, <strong>B&amp;W + Color</strong> at
+          3–4 months, <strong>Color</strong> from 5 months. Newborns barely see colour yet, which is
+          why mono comes first.</p>
+        <p>Nothing is locked. Feel free to ignore the suggestion — whichever your baby watches longer
+          is the right one.</p>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">🎂</span>
+      <div>
+        <h2>태어난 날을 꼭 적어야 하나요?</h2>
+        <p>아니요. 처음 한 번 묻고, <strong>건너뛰기</strong>를 누르면 흑백으로 시작합니다.
+          적어 두면 개월수에 맞는 모드를 추천하는 데에만 쓰이고 기기 안에만 저장돼요.</p>
+        <p>나중에 적거나 고치려면 설정의 <strong>아이 ▸ 태어난 날</strong>에서 할 수 있습니다.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">🎂</span>
+      <div>
+        <h2>Do I have to enter the birth date?</h2>
+        <p>No. The app asks once, and <strong>Skip</strong> starts you on mono. If you do enter it,
+          it is used only to suggest a mode for your baby’s age and it stays on the device.</p>
+        <p>You can add or change it later under <strong>Baby ▸ Birth date</strong> in Settings.</p>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">⚙️</span>
+      <div>
+        <h2>설정은 어디 있나요?</h2>
+        <p>첫 화면 오른쪽 위 톱니바퀴입니다. 아기가 눌러 바꾸지 못하게 <strong>어른 확인</strong>이
+          있어요 — “칠 곱하기 팔”처럼 글자로 적힌 곱셈이 나오니, 답을 숫자로 적으면 열립니다.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">⚙️</span>
+      <div>
+        <h2>Where are the settings?</h2>
+        <p>The gear button at the top right of the first screen. A <strong>parental gate</strong> keeps
+          little hands out — it shows a multiplication written in words (“seven times eight”), so type
+          the answer as digits to continue.</p>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">⏱️</span>
+      <div>
+        <h2>카드가 너무 빨리 / 느리게 바뀌어요</h2>
+        <p>설정의 <strong>카드 ▸ 카드 바뀌는 시간</strong>에서 5초부터 30초까지 1초 단위로 고릅니다.
+          기본은 8초예요. 자주 쓰는 값은 단추로 바로 고르고, 슬라이더로 크게 옮기고,
+          −/+로 1초씩 다듬을 수 있습니다.</p>
+        <p>아기가 한 그림을 끝까지 눈으로 따라가지 못하면 길게, 금방 눈을 떼면 짧게 해 보세요.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">⏱️</span>
+      <div>
+        <h2>The cards change too fast / too slowly</h2>
+        <p>Under <strong>Cards ▸ Card interval</strong> you can pick anything from 5 to 30 seconds in
+          one-second steps; the default is 8. Use the shortcut buttons for common values, the slider to
+          move a long way, and −/+ to nudge by a second.</p>
+        <p>If your baby can’t follow a picture all the way across, make it longer; if they look away
+          quickly, make it shorter.</p>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">🫧</span>
+      <div>
+        <h2>그림이 움직이지 않게 할 수 있나요?</h2>
+        <p>설정의 <strong>움직임 ▸ 그림 움직임</strong>에서 고릅니다.
+          <strong>섞어서</strong>(기본)는 반은 지나가고 반은 멈추고,
+          <strong>움직여요</strong>는 전부 지나가고, <strong>멈춰 있어요</strong>는 전부 멈춥니다.</p>
+        <p>멈춰 있어요를 골라도 그림이 놓이는 자리는 카드마다 바뀝니다 — 자리가 고정되면 눈을
+          움직일 일이 없어서요. 기기 설정에서 <strong>동작 줄이기</strong>가 켜져 있으면 그림은
+          움직이지 않습니다.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">🫧</span>
+      <div>
+        <h2>Can I stop the picture from moving?</h2>
+        <p>Choose under <strong>Movement ▸ Picture movement</strong>: <strong>Mixed</strong> (the
+          default) drifts half of them and holds half still, <strong>All drift</strong> moves every
+          card, and <strong>All still</strong> holds every card in place.</p>
+        <p>Even on All still, each card appears in a different spot — a fixed spot gives the eyes
+          nothing to do. If <strong>Reduce Motion</strong> is on in your device settings, pictures
+          never drift.</p>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">🎵</span>
+      <div>
+        <h2>음악을 끄거나 한 곡만 듣고 싶어요</h2>
+        <p>설정의 <strong>소리</strong>에서 <strong>음악</strong>을 끄거나,
+          <strong>곡</strong>에서 한 곡만 고를 수 있습니다. 브람스 자장가 · 캐논 · 작은별 ·
+          환희의 송가 · 엘리제를 위하여 다섯 곡이고, <strong>들어 보기</strong>로 미리 들을 수 있어요.</p>
+        <p>시작·종료를 알리는 짧은 소리와 진동은 <strong>시작·종료 알림음</strong>에서 따로 끕니다.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">🎵</span>
+      <div>
+        <h2>Turning the music off, or playing just one piece</h2>
+        <p>Under <strong>Sound</strong> you can switch <strong>Music</strong> off, or pick a single
+          piece under <strong>Piece</strong>. There are five — Brahms’ Lullaby, Pachelbel’s Canon,
+          Twinkle Twinkle, Ode to Joy and Für Elise — and <strong>Listen</strong> plays a preview.</p>
+        <p>The short start and finish chime (with haptics) has its own switch,
+          <strong>Start and stop chimes</strong>.</p>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">📊</span>
+      <div>
+        <h2>기록은 어떻게 보나요? 지울 수 있나요?</h2>
+        <p>첫 화면의 <strong>기록</strong>을 누르면 하루에 한 줄씩 보이고, 줄을 펼치면 그날 회차가
+          나옵니다. 위쪽에 오늘 · 최근 7일 · 하루 평균이 있어요.</p>
+        <p>설정의 <strong>기록 ▸ 기록 모두 지우기</strong>로 지우고,
+          <strong>저장된 모든 것 지우기</strong>는 태어난 날까지 함께 지웁니다. 되돌릴 수 없어요.
+          10초보다 짧은 회차는 애초에 기록하지 않습니다 — 잘못 눌러 곧바로 끈 것이 쌓이지 않게요.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">📊</span>
+      <div>
+        <h2>Where are the records, and can I erase them?</h2>
+        <p>Tap <strong>Records</strong> on the first screen: one row per day, and expanding a row shows
+          that day’s sessions. Today, the last 7 days and the daily average are at the top.</p>
+        <p>Use <strong>Records ▸ Delete all records</strong> in Settings, or
+          <strong>Delete everything saved</strong> to clear the birth date too. Neither can be undone.
+          Sessions shorter than 10 seconds are never recorded, so a mistaken tap doesn’t pile up.</p>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">🔄</span>
+      <div>
+        <h2>세로로 들어도 되나요?</h2>
+        <p>네. 가로·세로 모두 됩니다. 보호자가 둔 대로 그려요. 그림은 늘 화면 짧은 쪽에 맞춰
+          그려지므로 어느 방향에서든 아기에게 같은 크기로 보입니다.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">🔄</span>
+      <div>
+        <h2>Can I hold it in portrait?</h2>
+        <p>Yes — portrait and landscape both work, whichever way you prop the device. The picture is
+          always sized to the screen’s shorter side, so it looks the same size to your baby either way.</p>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="card" data-lang="ko">
+      <span class="emoji" aria-hidden="true">🙂</span>
+      <div>
+        <h2>아기가 화면을 보지 않아요</h2>
+        <p>졸리거나 배가 고프면 보지 않습니다. 기분이 좋은 때 짧게 해 보세요. 기기를 아기 눈
+          정면보다 약간 위쪽에 두면 고개를 드는 데에 도움이 됩니다.</p>
+        <p>그래도 안 보면 그날은 그만둬도 괜찮아요. 터미타임은 보호자가 지켜보는 동안만 합니다 —
+          엎드린 아기를 혼자 두지 마세요.</p>
+      </div>
+    </div>
+    <div class="card" data-lang="en">
+      <span class="emoji" aria-hidden="true">🙂</span>
+      <div>
+        <h2>My baby isn’t looking at the screen</h2>
+        <p>Babies won’t look when they’re sleepy or hungry — try a short session when they’re content.
+          Placing the device slightly above eye level can help them lift their head.</p>
+        <p>If they’re still not interested, it’s fine to stop for the day. Tummy time is for while you
+          are watching — never leave a baby lying face-down alone.</p>
+      </div>
+    </div>
+
+    <h2 style="text-align:center;margin:32px 0 0;font-size:18px;color:var(--brand-ink)">
+      <span data-lang="ko">아직 안 풀렸나요?</span>
+      <span data-lang="en">Still stuck?</span>
+    </h2>
+    <a class="mailto" href="mailto:baby.planner.wooni@gmail.com?subject=Play%20with%20Tummy%20Time!">
+      baby.planner.wooni@gmail.com
+    </a>
+    <p class="reply" data-lang="ko">보통 2~3일 안에 답장합니다. 기기(아이폰·아이패드)와 iOS 버전, 앱 버전을 함께 적어 주시면 빠릅니다.</p>
+    <p class="reply" data-lang="en">We usually reply within 2–3 days. Telling us your device, your iOS version and the app version helps.</p>
+
+    <details data-lang="ko">
+      <summary>그 밖에 자주 묻는 것</summary>
+      <div>
+        <h3>어떤 기기에서 되나요?</h3>
+        <p>iOS 17 이상의 iPhone과 iPad입니다. 가로·세로 모두 쓸 수 있습니다.</p>
+
+        <h3>인터넷이 필요한가요?</h3>
+        <p>아니요. 비행기 모드에서도 똑같이 동작합니다. 음악도 음원 파일을 받아 오지 않고 앱 안에서
+          만들어 냅니다.</p>
+
+        <h3>결제나 광고가 있나요?</h3>
+        <p>없습니다. 인앱 결제·구독·광고가 전혀 없고, 가입할 계정도 없습니다.</p>
+
+        <h3>아기 정보를 모으나요?</h3>
+        <p>모으지 않습니다. 태어난 날과 기록은 이 기기 안에만 남고 어디에도 전송되지 않습니다.
+          자세한 내용은 <a href="privacy.html">개인정보처리방침</a>에 있습니다.</p>
+
+        <h3>터미타임 중에 화면이 꺼지지 않는데요?</h3>
+        <p>아기가 보는 중에 잠기면 안 되니 일부러 그렇게 했습니다. 종료를 누르면 기기의 원래 자동
+          잠금 설정으로 돌아갑니다.</p>
+
+        <h3>다른 앱에서 틀어 둔 음악과 겹칩니다</h3>
+        <p>보호자가 듣고 있던 음악을 끊지 않도록 함께 흐르게 해 두었습니다. 겹치는 것이 싫으면
+          설정에서 이 앱의 <strong>음악</strong>을 끄시면 됩니다.</p>
+
+        <h3>흑백 모드에서 바탕이 검게 바뀌어요</h3>
+        <p>카드마다 흰 바탕과 검은 바탕이 번갈아 나옵니다. 같은 그림도 새로 보이게 하는 장치이고,
+          고장이 아닙니다.</p>
+
+        <h3>글자를 읽어 주지 않나요?</h3>
+        <p>이 앱에는 읽어 줄 글자가 없습니다. 0~3개월 아기를 위한 앱이라 아기가 보는 화면에는 글자를
+          두지 않았고, 대신 고전 선율을 들려줍니다.</p>
+
+        <h3>앱 버전은 어디서 보나요?</h3>
+        <p>설정의 <strong>정보 ▸ 버전</strong>에 있습니다. 문의하실 때 함께 적어 주세요.</p>
+      </div>
+    </details>
+
+    <details data-lang="en">
+      <summary>Other common questions</summary>
+      <div>
+        <h3>Which devices does it work on?</h3>
+        <p>iPhone and iPad running iOS 17 or later, in both portrait and landscape.</p>
+
+        <h3>Do I need an internet connection?</h3>
+        <p>No. It behaves exactly the same in airplane mode. Even the music is generated inside the
+          app rather than downloaded.</p>
+
+        <h3>Are there purchases or ads?</h3>
+        <p>None. No in-app purchases, no subscriptions, no ads, and no account to sign up for.</p>
+
+        <h3>Do you collect data about my baby?</h3>
+        <p>We don’t. The birth date and the records stay on this device and are never transmitted.
+          See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+
+        <h3>The screen doesn’t turn off during tummy time</h3>
+        <p>That’s deliberate — it must not lock while your baby is watching. Tapping Stop hands control
+          back to your device’s normal auto-lock setting.</p>
+
+        <h3>It plays over music from another app</h3>
+        <p>We let it play alongside, rather than interrupting whatever you already had going. If you’d
+          rather not have both, switch <strong>Music</strong> off in Settings.</p>
+
+        <h3>In mono mode the background turns black</h3>
+        <p>The background alternates between white and black from card to card. It makes a familiar
+          picture look new again — it isn’t a fault.</p>
+
+        <h3>Doesn’t it read anything aloud?</h3>
+        <p>There is no text to read. The app is for babies 0–3 months old, so the screen your baby sees
+          has no words on it; it plays classical melodies instead.</p>
+
+        <h3>Where do I find the app version?</h3>
+        <p>Under <strong>About ▸ Version</strong> in Settings. Please include it when you write to us.</p>
+      </div>
+    </details>
+  </main>
+
+  <footer>
+    <p data-lang="ko"><a href="privacy.html">개인정보처리방침</a></p>
+    <p data-lang="en"><a href="privacy.html">Privacy Policy</a></p>
+    <p>© Copyright Wooni</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var buttons = document.querySelectorAll("[data-set-lang]");
+
+    function apply(lang) {
+      document.documentElement.lang = lang;
+      buttons.forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+      });
+      try { localStorage.setItem("ttp-support-lang", lang); } catch (e) {}
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem("ttp-support-lang"); } catch (e) {}
+    var prefersKo = (navigator.language || "en").toLowerCase().indexOf("ko") === 0;
+    apply(saved === "ko" || saved === "en" ? saved : (prefersKo ? "ko" : "en"));
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () { apply(b.dataset.setLang); });
+    });
+  })();
+</script>
+</body>
+</html>
